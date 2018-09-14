@@ -1,5 +1,9 @@
 # project-one-hangman
 
+<<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 64db00825b7f4125b15f2b62d3678f6898c288e7
 ## Description
 
 Project 1: Hangman is a very high stakes spelling lesson and guesing game. It used for personal entertainment and time-killing (preferably not a stick man).
@@ -36,3 +40,9 @@ To start the game is pretty simple. Click on the link to open the page. As soon 
 ## Contribution Guidelines
 
 The code to the game is available on [Github here](https://github.com/Marichka94/project-one-hangman/tree/gh-pages). Anybody and everybody are welcome to contribute to it, identify bugs and propose improvements. For further questions and propositions sibmit your issue [here](https://github.com/Marichka94/project-one-hangman/issues).
+<<<<<<< HEAD
+=======
+Test your vocabulary by finding hidden words.
+>>>>>>> 4b05d8bf8f36792c1ff1bc25d8ea81cabdb3eaba
+=======
+>>>>>>> 64db00825b7f4125b15f2b62d3678f6898c288e7
