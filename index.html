@@ -1,88 +1,31 @@
 <!DOCTYPE html>
-<html lang="en" dir="ltr">
-	<head>
-		<meta charset="utf-8">
-		<title>Hangman</title>
-		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<!-- Bootstrap links from https://getbootstrap.com/docs/3.3/getting-started/ -->
-	  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-	  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.js"></script>
-	  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-		<script defer type="text/javascript" src="script.js"></script>
-		<link href="https://fonts.googleapis.com/css?family=Cabin+Sketch:400,700" rel="stylesheet">
-			<link rel="stylesheet" href="css/style.css">
-	</head>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Hangman | Classic Word Guessing Game</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div id="board" class="hidden">
+      <div id="round"></div>
+      <div id="livesLeft"></div>
+      <div id="word"></div>
+      <div id="usedLetters"></div>
+      <form onsubmit="letterInUse()">
+        <input
+          id="input"
+          type="text"
+          placeholder="Your best guess"
+          maxlength="1"
+          value=""
+        />
+        <input type="button" value="Submit" onclick="letterInUse()" />
+      </form>
+    </div>
+    <button onclick="startGame()">Start New Game</button>
 
-	<body class="container">
-		<!-- HEADER -->
-		<div class='row'><h1 class="col-sm-12 text-center">Hangman</h1></div>
-
-		<!-- SCORE AND TIMER INFO BOARD  -->
-		<div id='info-board'>
-			<div class="row">
-				<div id='score' class="col-sm-6 text-left"></div>
-			</div>
-			<div class="row">
-				<div id='best-score' class="col-sm-12 text-left"></div>
-			</div>
-		</div>
-
-		<!-- WORD BOARD -->
-		<div id='word-board' class="text-center"></div>
-
-		<!-- PICTURES OF HANGMAN -->
-		<div class="row playground">
-			<div id='hangman' class="col-sm-6">
-				<img src="images/hangman0.png" alt="base" id='image'>
-			</div>
-
-			<form>
-				<div  id='input' class="input-group">
-				  <input type="text" class="input-lg input-field form-control" maxlength='1' placeholder="Enter your letter" value=''>
-				  <div class="input-group-btn">
-				    <button class="btn btn-default button submit btn-lg btn-warning" type="submit">
-				      <i>Submit</i>
-				    </button>
-				    </div>
-				</div>
-			</form>
-
-			<!-- USED LETTERS -->
-			<div id='used-letters' class="col-sm-3">USED LETTERS: <span id="used-letters-holder"></span></div>
-			<!-- WIN MODAL -->
-			<div class="modal fade" id="winModal" role="dialog">
-				<div class="modal-dialog">
-					<div class="modal-content">
-						<div class="modal-header">
-							<h4 class="modal-title text-center">You guessed the word</h4>
-						</div>
-			      <div class="modal-body text-center">
-			        <p>You're on a winning streak, keep going!</p>
-						</div>
-			    </div>
-			  </div>
-			</div>
-		</div>
-
-		<!-- GAME OVER MODAL -->
-		<div class="modal fade" id="gameOverModal" role="dialog">
-    	<div class="modal-dialog">
-			  <div class="modal-content">
-			    <div class="modal-header">
-			      <h4 class="modal-title text-center">GAME OVER</h4>
-			    </div>
-			    <div class="modal-body text-center">
-			      <p>That's it! Game over, man! Game over!</p><p id='result'></p>
-						<div class="modal-footer">
-							<!-- NEW GAME BUTTON -->
-							<div id='new-game' class='text-center'>
-								<button class='button btn btn-dark btn-lg' type="button" name="button">New Game</button>
-							</div>
-						</div>
-					</div>
-			  </div>
-			</div>
-		</div>
-	</body>
+    <script src="script.js"></script>
+  </body>
 </html>
