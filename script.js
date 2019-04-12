@@ -15,35 +15,13 @@ const word = document.getElementById("word");
 const input = document.getElementById("input");
 const board = document.getElementById("board");
 const round = document.getElementById("round");
-const livesLeft = document.getElementById("livesLeft");
+const lifecount = document.getElementById("lifecount");
 let wordInPlay;
 let hiddenLettersArray = [];
 let number = 0; // number to figure out when round is over
 let roundNumber = 1;
 let lives = 5;
 let pressedKeyHistory = {};
-
-// function TO FIGURE OUT IF CHAR IS APPROPRIATE
-function letterInUse() {
-  event.preventDefault();
-  let inputCharCode = input.value.toLowerCase().charCodeAt();
-
-  if (
-    !pressedKeyHistory[input.value.toLowerCase()] &&
-    97 <= inputCharCode &&
-    inputCharCode <= 122
-  ) {
-    pressedKeyHistory[input.value.toLowerCase()] = inputCharCode;
-    guessLetter();
-    console.log(pressedKeyHistory);
-  } else {
-    console.log(input.value.toLowerCase().charCodeAt());
-    input.value = "";
-    return null;
-  }
-
-  input.value = "";
-}
 
 // REVEAL GAMEBOARD function
 function revealBoard() {
@@ -64,6 +42,39 @@ function displayNewHiddenWord() {
     hiddenLettersArray.push("_ ");
   }
   word.textContent = hiddenLettersArray.join("");
+}
+
+// function TO FIGURE OUT IF CHAR IS APPROPRIATE
+function letterInUse() {
+  event.preventDefault();
+  let inputCharCode = input.value.toLowerCase().charCodeAt();
+
+  if (
+    !pressedKeyHistory[input.value.toLowerCase()] &&
+    97 <= inputCharCode &&
+    inputCharCode <= 122
+  ) {
+    pressedKeyHistory[input.value.toLowerCase()] = inputCharCode;
+    letterExist();
+  } else {
+    input.value = "";
+    return null;
+  }
+
+  input.value = "";
+}
+
+// LIFECOUNT function
+function letterExist() {
+  if (wordInPlay.indexOf(input.value.toLowerCase()) >= 0) {
+    console.log("letter exists");
+    guessLetter();
+  } else {
+    lives--;
+    lifecount.innerHTML = "Lives left: " + lives;
+    window.setTimeout(gameOver, 500);
+    console.log("letter does not exist");
+  }
 }
 
 // GUESS LETTER function
@@ -98,8 +109,7 @@ function nextRound() {
 // GAME OVER function
 function gameOver() {
   if (lives === 0) {
-    alert("Game Over!");
-    startGame();
+    board.setAttribute("class", "hidden");
   }
 }
 
@@ -108,7 +118,7 @@ function startGame() {
   roundNumber = 1;
   round.innerHTML = "Round: " + roundNumber;
   lives = 5;
-  livesLeft.innerHTML = "Lives left: " + lives;
+  lifecount.innerHTML = "Lives left: " + lives;
   number = 0;
   pressedKeyHistory = {};
   revealBoard();
