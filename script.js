@@ -16,6 +16,7 @@ const input = document.getElementById("input");
 const board = document.getElementById("board");
 const round = document.getElementById("round");
 const lifecount = document.getElementById("lifecount");
+const newGameBtn = document.getElementById("new-game-btn");
 let wordInPlay;
 let hiddenLettersArray = [];
 let number = 0; // number to figure out when round is over
@@ -25,7 +26,8 @@ let pressedKeyHistory = {};
 
 // REVEAL GAMEBOARD function
 function revealBoard() {
-  board.removeAttribute("class");
+  board.removeAttribute("style");
+  board.setAttribute("style", "z-index: 1000");
 }
 
 // PICK RANDOM WORD function
@@ -66,14 +68,13 @@ function letterInUse() {
 
 // LIFECOUNT function
 function letterExist() {
+  event.preventDefault();
   if (wordInPlay.indexOf(input.value.toLowerCase()) >= 0) {
-    console.log("letter exists");
     guessLetter();
   } else {
     lives--;
     lifecount.innerHTML = "Lives left: " + lives;
     window.setTimeout(gameOver, 500);
-    console.log("letter does not exist");
   }
 }
 
@@ -88,7 +89,7 @@ function guessLetter() {
       window.setTimeout(nextRound, 800);
     }
   }
-  gameOver();
+  window.setTimeout(gameOver, 500);
   input.value = "";
 }
 
@@ -96,7 +97,7 @@ function guessLetter() {
 function nextRound() {
   number += 1;
   if (number === wordInPlay.length) {
-    alert("you win this round");
+    alert("You won this round!");
     pickRandomWord();
     displayNewHiddenWord();
     number = 0;
@@ -109,8 +110,15 @@ function nextRound() {
 // GAME OVER function
 function gameOver() {
   if (lives === 0) {
-    board.setAttribute("class", "hidden");
+    alert(`Game Over! The hidden word is "${wordInPlay.join("")}"`);
+    board.setAttribute("style", "display:none");
+    newGameBtn.setAttribute("style", "opacity: 1; transition: all .5s ease-in");
   }
+}
+
+function exitGame() {
+  board.setAttribute("style", "display:none");
+  newGameBtn.setAttribute("style", "opacity: 1; transition: all .5s ease-in");
 }
 
 // START NEW GAME function
@@ -124,4 +132,8 @@ function startGame() {
   revealBoard();
   pickRandomWord();
   displayNewHiddenWord();
+  newGameBtn.setAttribute(
+    "style",
+    "opacity: 0; transition: all 2s ease-out; z-index: -1000"
+  );
 }
