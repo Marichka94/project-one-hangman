@@ -1,182 +1,139 @@
-//SCORE COUNT
-const score = document.querySelector('#score')
-const bScore = document.querySelector('#best-score')
-let scoreCount = 0;
-let bestScore = 0
-score.textContent = 'Score: ' + scoreCount
-bScore.textContent = 'Best score: ' + bestScore
+const wordsArray = [
+  "love",
+  "andrew",
+  "charlie",
+  "oliver",
+  "family",
+  "hazel",
+  "adventures",
+  "marriage",
+  "hubby",
+  "wifey"
+];
 
+const word = document.getElementById("word");
+const input = document.getElementById("input");
+const board = document.getElementById("board");
+const round = document.getElementById("round");
+const lifecount = document.getElementById("lifecount");
+const newGameBtn = document.getElementById("new-game-btn");
+let wordInPlay;
+let hiddenLettersArray = [];
+let number = 0; // number to figure out when round is over
+let roundNumber = 1;
+let lives = 5;
+let pressedKeyHistory = {};
 
-//WORDS LIBRARY
-const words = [
-	["D", "O", "G"],
-	["C", "A", "T"],
-	["H", "O", "R", "S", "E"],
-	["W", "H", "A", "L", "E"],
-	["W", "O", "L", "F"],
-	["B", "E", "A", "R"],
-  ["L", "I", "O", "N"],
-  ["F", "O", "X"],
-  ["H", "A", "R", "E"],
-  ["T","I", "G", "E", "R"],
-  ["C", "O", "W"],
-  ["H", "E", "N"],
-  ["D", "U", "C", "K"],
-  ["P", "I", "G"],
-  ["M", "O", "N", "K", "E", "Y"],
-  ["Z", "E", "B", "R", "A"],
-  ["A", "N", "D", "R", "E", "W"],
-	["O", "X"],
-	["O", "W", "L"],
-	["W", "O", "R", "M"],
-	["S", "N", "A", "K", "E"],
-	["F", "I", "S", "H"]
-	["B", "U", "G"],
-	["C", "R", "O", "W"],
-	["D", "R", "A", "G", "O", "N", "F", "L","Y"],
-	["S", "H", "A", "R", "K"]
-]
-
-
-//RANDOM WORDS, HIDDEN PLACEHOLDERS
-const wordBoard = document.querySelector('#word-board')
-let fullWord = words[Math.floor(Math.random() * (words.length - 1))]
-let hiddenWord = new Array(fullWord.length)
-for (let i = 0; i < hiddenWord.length; i++) {
-	hiddenWord[i] = "_ "
+// REVEAL GAMEBOARD function
+function revealBoard() {
+  board.removeAttribute("style");
+  board.setAttribute("style", "z-index: 1000");
 }
-function printPlaceholders() {
-	for (let i = 0; i < hiddenWord.length; i++) {
-		let letter = document.createTextNode(hiddenWord[i])
-		wordBoard.appendChild(letter)
-		}
-	}
-printPlaceholders()
 
+// PICK RANDOM WORD function
+function pickRandomWord() {
+  wordInPlayIndex = Math.floor(Math.random() * Math.floor(wordsArray.length));
+  wordInPlay = [...wordsArray[wordInPlayIndex]];
+  console.log(wordInPlay, wordInPlayIndex);
+}
 
-// CHECK MATCHING LETTERS
-let hangman = document.querySelector('#image')
-let livesUsed = 0
-let usedLetters = document.querySelector('#used-letters-holder')
+// DISPLAY HIDDEN WORD function
+function displayNewHiddenWord() {
+  hiddenLettersArray = [];
+  for (char of wordInPlay) {
+    hiddenLettersArray.push("_ ");
+  }
+  word.textContent = hiddenLettersArray.join("");
+}
 
+// function TO FIGURE OUT IF CHAR IS APPROPRIATE
+function letterInUse() {
+  event.preventDefault();
+  let inputCharCode = input.value.toLowerCase().charCodeAt();
 
-//MATCH AND NO MATCH - START OF A VERY HUGE FUNCTION - FUNCTIONZILLA IS BORN
-function checkMatch() {
-	let inputLetter = document.querySelector('.input-field').value.toUpperCase()
-  if(fullWord.indexOf(inputLetter) >= 0) {
-    hiddenWord[fullWord.indexOf(inputLetter)] = inputLetter + " "
+  if (
+    !pressedKeyHistory[input.value.toLowerCase()] &&
+    97 <= inputCharCode &&
+    inputCharCode <= 122
+  ) {
+    pressedKeyHistory[input.value.toLowerCase()] = inputCharCode;
+    letterExist();
   } else {
-    let letter = document.createTextNode(' ' + inputLetter)
-    usedLetters.appendChild(letter)
-    console.log(letter)
-    livesUsed++
-    hangman.src = 'images/hangman' + livesUsed + '.png'
+    input.value = "";
+    return null;
   }
-  inputLetter = ''
-	let wordPrint = document.querySelector('#word-board')
- 	wordPrint.innerHTML=''
- 	printPlaceholders()
 
-					// END OF THE GAME
-	let allLettersOpened = true
-	for (var i = 0; i < hiddenWord.length; i++){
-	  if(hiddenWord[i] === "_ ") {
-		  allLettersOpened = false;
-  	}
-	}
+  input.value = "";
+}
 
-					//WIN - LOOSE
-	setTimeout(function() {
-  	if(allLettersOpened) {
-      scoreCount++
-			score.textContent = 'Score: ' + scoreCount
-  		$("#winModal").modal("show");
-			$(".input-field").unbind()
-			$(".input-field").keypress(function(e) {
-				if(e.which == 13) {
-					e.preventDefault()
-					$("#winModal").modal("hide")
-					$(".input-field").unbind()
-					$(".input-field").keypress(function(e) {
-						if(e.which == 13) {
-							e.preventDefault()
-							checkMatch();
-							document.querySelector(".input-field").value = ''
-						}
-					});
-				}
-			})
-			fullWord = ""
-      $("#word-board").empty()
-    	$("#used-letters-holder").empty()
-  		fullWord = words[Math.floor(Math.random() * (words.length - 1))]
-    	hiddenWord = new Array(fullWord.length)
-    	for (let i = 0; i < hiddenWord.length; i++) {
-     		hiddenWord[i] = "_ "
-     	}
-    	printPlaceholders()
+// LIFECOUNT function
+function letterExist() {
+  event.preventDefault();
+  if (wordInPlay.indexOf(input.value.toLowerCase()) >= 0) {
+    guessLetter();
+  } else {
+    lives--;
+    lifecount.innerHTML = "Lives left: " + lives;
+    window.setTimeout(gameOver, 500);
+  }
+}
+
+// GUESS LETTER function
+function guessLetter() {
+  event.preventDefault();
+
+  for (let i = 0; i < wordInPlay.length; i++) {
+    if (wordInPlay[i] === input.value.toLowerCase()) {
+      hiddenLettersArray[i] = wordInPlay[i];
+      word.textContent = hiddenLettersArray.join("");
+      window.setTimeout(nextRound, 800);
     }
-		if (livesUsed === 6) {
-    	if (scoreCount > bestScore) {
-      	bestScore = scoreCount
-    	}
-			$(".input-field").keypress(function(e) {
-	    	if(e.which == 13) {
-			    e.preventDefault()
-					$(".input-field").unbind()
-			    newGame()
-			 		$("#gameOverModal").modal("hide")
-			   }
-			 })
-      $("#gameOverModal").modal("show");
-      $("new-game").show()
-      $("#new-game").click(function(){
-        $("#gameOverModal").modal("hide");
-      	});
-    }
-	}, 500)
-} //FUNCTIONZILLA IS DEAD
-
-
-//SUBMIT BUTTON + ENTER INPUT
-$('.submit').click(function(e) {
-  checkMatch()
-  document.querySelector(".input-field").value = ''
-})
-
-$(".input-field").keypress(function(e) {
-  if(e.which == 13) {
-    e.preventDefault()
-    checkMatch();
-    document.querySelector(".input-field").value = ''
   }
-});
+  window.setTimeout(gameOver, 500);
+  input.value = "";
+}
 
-$('#new-game').click(newGame)
+// NEXT ROUND function
+function nextRound() {
+  number += 1;
+  if (number === wordInPlay.length) {
+    alert("You won this round!");
+    pickRandomWord();
+    displayNewHiddenWord();
+    number = 0;
+    roundNumber += 1;
+    round.innerHTML = "Round: " + roundNumber;
+    pressedKeyHistory = {};
+  }
+}
 
-function newGame (){
-  if (scoreCount > bestScore) {
-    bestScore = scoreCount
+// GAME OVER function
+function gameOver() {
+  if (lives === 0) {
+    alert(`Game Over! The hidden word is "${wordInPlay.join("")}"`);
+    board.setAttribute("style", "display:none");
+    newGameBtn.setAttribute("style", "opacity: 1; transition: all .5s ease-in");
   }
-  bScore.textContent = 'Best score: ' + bestScore
-  scoreCount = 0
-  score.textContent = 'Score: ' + scoreCount
-  fullWord = ""
-  fullWord = words[Math.floor(Math.random() * (words.length - 1))]
-  hiddenWord = new Array(fullWord.length)
-  for (let i = 0; i < hiddenWord.length; i++) {
-  	hiddenWord[i] = "_ "
-  }
-  hangman.src = "images/hangman0.png"
-  livesUsed = 0
-  $("#word-board").empty()
-  $("#used-letters-holder").empty()
-  printPlaceholders()
-	$(".input-field").keypress(function(e) {
-	  if(e.which == 13) {
-	    e.preventDefault()
-	      checkMatch();
-	      document.querySelector(".input-field").value = ''
-	  }
-	});
+}
+
+function exitGame() {
+  board.setAttribute("style", "display:none");
+  newGameBtn.setAttribute("style", "opacity: 1; transition: all .5s ease-in");
+}
+
+// START NEW GAME function
+function startGame() {
+  roundNumber = 1;
+  round.innerHTML = "Round: " + roundNumber;
+  lives = 5;
+  lifecount.innerHTML = "Lives left: " + lives;
+  number = 0;
+  pressedKeyHistory = {};
+  revealBoard();
+  pickRandomWord();
+  displayNewHiddenWord();
+  newGameBtn.setAttribute(
+    "style",
+    "opacity: 0; transition: all 2s ease-out; z-index: -1000"
+  );
 }
