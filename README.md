@@ -1,4 +1,4 @@
-# project-one-hangman
+# Hangman | Classic Word Guessing Game
 
 ## Description
 
