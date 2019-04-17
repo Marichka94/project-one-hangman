@@ -4,9 +4,9 @@
 
 Hangman is a classic word guessing game in which you must guess as many hidden words as you can before you run out of lives! 
 
-![alt text](https://imgur.com/AD0TvV3 "Screenshot of the game")
+![alt text](https://i.imgur.com/AD0TvV3.png "Screenshot of the game")
 
-![alt text](https://imgur.com/mLrhr4v "Screenshot of the game")
+![alt text](https://i.imgur.com/mLrhr4v.png "Screenshot of the game")
 
 
 ## List of Features
