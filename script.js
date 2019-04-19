@@ -70,6 +70,7 @@ function letterInUse() {
   ) {
     pressedKeyHistory[input.value.toLowerCase()] = inputCharCode;
     letterExist();
+    pressedKeys();
   } else {
     input.value = "";
     return null;
@@ -116,6 +117,7 @@ function nextRound() {
     roundNumber += 1;
     round.innerHTML = "Round: " + roundNumber;
     pressedKeyHistory = {};
+    usedLetters.innerHTML = "Used letters: ";
   }
 }
 
@@ -128,6 +130,7 @@ function gameOver() {
   }
 }
 
+// EXIT GAME function
 function exitGame() {
   board.setAttribute("style", "display:none");
   newGameBtn.setAttribute("style", "opacity: 1; transition: all .5s ease-in");
@@ -145,11 +148,12 @@ function startGame() {
     "style",
     "opacity: 0; transition: all 2s ease-out; z-index: -1000"
   );
+  usedLetters.innerHTML = "Used letters: ";
   revealBoard();
   pickRandomWord();
 }
 
-// DISPLAY HINT function
+// DISPLAY HINT API function
 function showDefinition() {
   fetch(`https://wordsapiv1.p.rapidapi.com/words/${wordInPlay.join("")}`, {
     method: "get",
@@ -171,4 +175,10 @@ function showDefinition() {
 
       hint.innerHTML = "<strong>Hint:</strong> " + def.join(", ");
     });
+}
+
+// DISPLAY USED LETTERS function
+function pressedKeys() {
+  usedLetters.innerHTML =
+    "Used letters:" + Object.keys(pressedKeyHistory).join(", ");
 }
