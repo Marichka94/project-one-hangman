@@ -125,7 +125,7 @@ body {
   grid-column: 1 / -1;
   grid-row: 3 / span 1;
   font-size: 3rem;
-  margin: -13rem auto 0;
+  margin: -10rem auto 0;
   color: #ccc;
 }
 
