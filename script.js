@@ -4,6 +4,7 @@ const board = document.getElementById("board");
 const round = document.getElementById("round");
 const lifecount = document.getElementById("lifecount");
 const newGameBtn = document.getElementById("new-game-btn");
+const usedLetters = document.getElementById("usedLetters");
 const hint = document.getElementById("hint");
 let wordInPlay;
 let hiddenLettersArray = [];
@@ -11,8 +12,7 @@ let number = 0; // number to figure out when round is over
 let roundNumber = 1;
 let lives = 5;
 let pressedKeyHistory = {};
-
-// CONNECT API
+let usedLettersList = [];
 
 // REVEAL GAMEBOARD function
 function revealBoard() {
@@ -20,10 +20,10 @@ function revealBoard() {
   board.setAttribute("style", "z-index: 1000");
 }
 
-// PICK RANDOM WORD function
+// PICK RANDOM WORD APIs function
 function pickRandomWord() {
   fetch(
-    "https://wordsapiv1.p.rapidapi.com/words/?random=true&frequencymax=5&letterPattern=^[a-z]{3,8}$",
+    "https://wordsapiv1.p.rapidapi.com/words/?random=true&frequencymax=7&letterPattern=^[a-z]{3,8}$",
     {
       method: "get",
       headers: {
@@ -35,9 +35,9 @@ function pickRandomWord() {
     .then(response => response.json())
     .then(data => {
       let testRegex = /^[a-zA-Z]{1,10}$/;
-      if (testRegex.test(data.word)) {
+      if (testRegex.test(data.word) && data.results) {
         wordInPlay = [...data.word];
-        hint.innerHTML = "Hint not available";
+        hint.innerHTML = "Loading...";
         showDefinition();
         console.log(wordInPlay);
       } else {
@@ -160,7 +160,15 @@ function showDefinition() {
   })
     .then(response => response.json())
     .then(data => {
-      console.log(data.results[0].definition);
-      hint.innerHTML = "Hint: " + data.results[0].definition;
+      let def = [];
+      for (let i = 0; i < data.results.length; i++) {
+        console.log(data.results[i].definition);
+        def.push(`${i + 1} - ${data.results[i].definition}
+        
+        `);
+      }
+      console.log(def);
+
+      hint.innerHTML = "<strong>Hint:</strong> " + def.join(", ");
     });
 }
