@@ -1,28 +1,18 @@
-const wordsArray = [
-  "love",
-  "andrew",
-  "charlie",
-  "oliver",
-  "family",
-  "hazel",
-  "adventures",
-  "marriage",
-  "hubby",
-  "wifey"
-];
-
 const word = document.getElementById("word");
 const input = document.getElementById("input");
 const board = document.getElementById("board");
 const round = document.getElementById("round");
 const lifecount = document.getElementById("lifecount");
 const newGameBtn = document.getElementById("new-game-btn");
+const hint = document.getElementById("hint");
 let wordInPlay;
 let hiddenLettersArray = [];
 let number = 0; // number to figure out when round is over
 let roundNumber = 1;
 let lives = 5;
 let pressedKeyHistory = {};
+
+// CONNECT API
 
 // REVEAL GAMEBOARD function
 function revealBoard() {
@@ -32,9 +22,31 @@ function revealBoard() {
 
 // PICK RANDOM WORD function
 function pickRandomWord() {
-  wordInPlayIndex = Math.floor(Math.random() * Math.floor(wordsArray.length));
-  wordInPlay = [...wordsArray[wordInPlayIndex]];
-  console.log(wordInPlay, wordInPlayIndex);
+  fetch(
+    "https://wordsapiv1.p.rapidapi.com/words/?random=true&frequencymax=5&letterPattern=^[a-z]{3,8}$",
+    {
+      method: "get",
+      headers: {
+        "X-RapidAPI-Host": "wordsapiv1.p.rapidapi.com",
+        "X-RapidAPI-Key": "3308a4d56emsheca7117613a12c3p1e0e5cjsn8ca39034f796"
+      }
+    }
+  )
+    .then(response => response.json())
+    .then(data => {
+      let testRegex = /^[a-zA-Z]{1,10}$/;
+      if (testRegex.test(data.word)) {
+        wordInPlay = [...data.word];
+        hint.innerHTML = "Hint not available";
+        showDefinition();
+        console.log(wordInPlay);
+      } else {
+        console.log("bad word");
+        pickRandomWord();
+      }
+    })
+    .then(displayNewHiddenWord)
+    .catch(error => console.log("error is", error));
 }
 
 // DISPLAY HIDDEN WORD function
@@ -129,11 +141,26 @@ function startGame() {
   lifecount.innerHTML = "Lives left: " + lives;
   number = 0;
   pressedKeyHistory = {};
-  revealBoard();
-  pickRandomWord();
-  displayNewHiddenWord();
   newGameBtn.setAttribute(
     "style",
     "opacity: 0; transition: all 2s ease-out; z-index: -1000"
   );
+  revealBoard();
+  pickRandomWord();
+}
+
+// DISPLAY HINT function
+function showDefinition() {
+  fetch(`https://wordsapiv1.p.rapidapi.com/words/${wordInPlay.join("")}`, {
+    method: "get",
+    headers: {
+      "X-RapidAPI-Host": "wordsapiv1.p.rapidapi.com",
+      "X-RapidAPI-Key": "3308a4d56emsheca7117613a12c3p1e0e5cjsn8ca39034f796"
+    }
+  })
+    .then(response => response.json())
+    .then(data => {
+      console.log(data.results[0].definition);
+      hint.innerHTML = "Hint: " + data.results[0].definition;
+    });
 }
