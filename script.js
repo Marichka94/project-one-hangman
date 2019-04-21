@@ -111,6 +111,7 @@ function nextRound() {
   number += 1;
   if (number === wordInPlay.length) {
     alert("You won this round!");
+    hint.innerHTML = "Loading...";
     pickRandomWord();
     displayNewHiddenWord();
     number = 0;
@@ -146,9 +147,11 @@ function startGame() {
   pressedKeyHistory = {};
   newGameBtn.setAttribute(
     "style",
-    "opacity: 0; transition: all 2s ease-out; z-index: -1000"
+    "position: absolute; top: 50%; left: 50%; opacity: 0; transform: translate(-50%, -50%); transition: all 2s ease-out; z-index: -1000"
+    // "opacity: 0; display: none; transition: all 2s ease-out"
   );
   usedLetters.innerHTML = "Used letters: ";
+  hint.innerHTML = "Loading...";
   revealBoard();
   pickRandomWord();
 }
@@ -166,13 +169,11 @@ function showDefinition() {
     .then(data => {
       let def = [];
       for (let i = 0; i < data.results.length; i++) {
-        console.log(data.results[i].definition);
+        // console.log(data.results[i].definition);
         def.push(`${i + 1} - ${data.results[i].definition}
         
         `);
       }
-      console.log(def);
-
       hint.innerHTML = "<strong>Hint:</strong> " + def.join(", ");
     });
 }
