@@ -45,6 +45,7 @@ body {
   justify-items: center;
   z-index: 10;
   font-size: 2.5rem;
+  overflow: hidden;
 }
 
 #lifecount {
@@ -159,7 +160,7 @@ body {
   background: #fff;
   padding: 1rem;
   width: 85%;
-  height: 85%;
+  height: 75%;
   text-align: justify;
   overflow: scroll;
   border-radius: 0.5rem;
@@ -338,12 +339,28 @@ body {
     font-size: 8rem;
   }
   #board {
+    font-size: 2rem;
     grid-template-rows: 1fr 1fr 0.5fr 0.8fr 2fr;
+  }
+  #container {
+    width: 70vw;
+  }
+  .start-game {
+    font-size: 4rem;
+  }
+  #hint {
+    height: 210px;
   }
 }
 
 @media screen and (max-width: 360px) {
   #word {
     font-size: 7rem;
+  }
+  #board {
+    font-size: 1.5rem;
+  }
+  #hint {
+    height: 170px;
   }
 }
