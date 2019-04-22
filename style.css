@@ -20,8 +20,8 @@ body {
   height: 100vh;
   position: relative;
   display: grid;
-  grid-template-columns: 1fr 60vw 1fr;
-  grid-template-rows: 1fr 45vw 1fr;
+  grid-template-columns: repeat(3, auto);
+  grid-template-rows: repeat(3, auto);
 }
 
 .game {
@@ -30,6 +30,10 @@ body {
   grid-row: 2 / span 1;
   box-shadow: 0px 1rem 5rem;
   border-radius: 5px;
+  width: 70vw;
+  height: 45vw;
+  align-self: center;
+  justify-self: center;
 }
 
 #board {
@@ -40,7 +44,7 @@ body {
   grid-template-rows: 1fr 3fr 0.5fr 0.8fr 2fr;
   justify-items: center;
   z-index: 10;
-  font-size: 2.8rem;
+  font-size: 2.5rem;
 }
 
 #lifecount {
@@ -143,7 +147,7 @@ body {
 #input:focus {
   transform: scale(1.1);
   border: none;
-  box-shadow: -0.5rem -0.5rem 1.7rem #ef7064, 0.5rem 0.5rem 1.7rem #393a59;
+  box-shadow: -0.3rem -0.3rem 1.4rem #ef7064, 0.3rem 0.3rem 1.4rem #393a59;
 }
 
 #hint {
@@ -310,5 +314,36 @@ body {
   86%,
   95.999% {
     opacity: 0.4;
+  }
+}
+
+@media screen and (max-width: 1024px) {
+  .game {
+    width: 95vw;
+    height: 95vh;
+  }
+}
+
+@media screen and (max-width: 800px) {
+  #word {
+    font-size: 12rem;
+  }
+  #board {
+    grid-template-rows: 1fr 2fr 0.5fr 0.8fr 2fr;
+  }
+}
+
+@media screen and (max-width: 550px) {
+  #word {
+    font-size: 8rem;
+  }
+  #board {
+    grid-template-rows: 1fr 1fr 0.5fr 0.8fr 2fr;
+  }
+}
+
+@media screen and (max-width: 360px) {
+  #word {
+    font-size: 7rem;
   }
 }
